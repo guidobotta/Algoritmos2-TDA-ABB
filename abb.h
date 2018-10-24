@@ -3,13 +3,19 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-
+/* ******************************************************************
+ *                DEFINICION DE LOS TIPOS DE DATOS
+ * *****************************************************************/
 
 typedef struct abb abb_t;
 
 typedef int (*abb_comparar_clave_t) (const char *, const char *);
 
 typedef void (*abb_destruir_dato_t) (void *);
+
+/* ******************************************************************
+ *                      PRIMITIVAS DEL ABB
+ * *****************************************************************/
 
 abb_t* abb_crear(abb_comparar_clave_t cmp, abb_destruir_dato_t destruir_dato);
 
