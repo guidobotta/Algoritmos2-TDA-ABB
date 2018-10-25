@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -g -std=c99 -Wall -Wconversion -Wno-sign-conversion -Werror 
 VFLAGS = --leak-check=full --track-origins=yes --show-reachable=yes
 
-CFILES = abb.c testing.c main.c pruebas_alumno.c
+CFILES = abbguido.c testing.c main.c pruebas_alumno.c
 HFILES = abb.h testing.h
 EXEC_S = main
 
