@@ -95,7 +95,30 @@ bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
     return true;
 }
 
-void *abb_borrar(abb_t *arbol, const char *clave);
+void _borrar_(abb_t *arbol, abb_nodo_t* hijo, abb_nodo_t* padre, abb_nodo_t* nuevo_hijo){
+    if ((arbol->cmp(hijo->clave, padre->clave)) > 0){
+        padre->der = nuevo_hijo;
+    } else {
+        padre->izq = nuevo_hijo;
+    }
+    free(hijo);
+}
+
+void *abb_borrar(abb_t *arbol, const char *clave){
+    abb_nodo_t* padre = NULL;
+    abb_nodo_t* hijo = buscar_hijo(arbol->raiz, &padre, clave, arbol->cmp);
+    if (!hijo) return NULL;
+
+    void* dato = hijo->dato;
+
+    if (hijo->izq){
+        if (hijo->der){} //CON DOS HIJOS
+        else _borrar_(arbol, hijo, padre, hijo->izq); //CON UN HIJO IZQUIERDO
+    } else if(hijo->der) _borrar_(arbol, hijo, padre, hijo->der); //CON UN HIJO DERECHO
+    else _borrar_(arbol, hijo, padre, NULL); //SIN HIJOS
+
+    return dato;
+}
 
 void *abb_obtener(const abb_t *arbol, const char *clave){
     abb_nodo_t* padre = NULL;
