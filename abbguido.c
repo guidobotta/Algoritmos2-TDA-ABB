@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "abb.h"
@@ -42,7 +43,7 @@ abb_nodo_t* buscar_hijo(abb_nodo_t* actual, abb_nodo_t** padre, const char* clav
     if(!actual) return NULL;
 
     int comp = cmp(actual->clave, clave);
-    if(!cmp) return actual;
+    if(!comp) return actual;
 
     *padre = actual;
     if(comp < 0) return buscar_hijo(actual->der, padre, clave, cmp);
@@ -69,7 +70,7 @@ abb_t* abb_crear(abb_comparar_clave_t cmp, abb_destruir_dato_t destruir_dato){
 bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
     abb_nodo_t* padre = NULL;
     abb_nodo_t* actual = buscar_hijo(arbol->raiz, &padre, clave, arbol->cmp);
-
+    
     if(!actual){
         char* copia_clave = malloc(sizeof(char)*(strlen(clave)+1));
         strcpy(copia_clave, clave);
@@ -84,13 +85,13 @@ bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
         } else {
             padre->izq = nodo_b;
         }
+        arbol->cantidad ++;
     }
     else{
         if(arbol->destruir_dato) arbol->destruir_dato(actual->dato);
         actual->dato = dato;
     }
 
-    arbol->cantidad ++;
     return true;
 }
 
@@ -99,6 +100,7 @@ void *abb_borrar(abb_t *arbol, const char *clave);
 void *abb_obtener(const abb_t *arbol, const char *clave){
     abb_nodo_t* padre = NULL;
     abb_nodo_t* hijo = buscar_hijo(arbol->raiz, &padre, clave, arbol->cmp);
+
     if (!hijo) return NULL;
 
     return hijo->dato;
