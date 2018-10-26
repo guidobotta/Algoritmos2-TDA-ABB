@@ -136,10 +136,10 @@ static void prueba_abb_reemplazar_con_destruir()
     abb_destruir(abb);
 }
 
-/*
+
 static void prueba_abb_borrar()
 {
-    abb_t* abb = abb_crear(NULL);
+    abb_t* abb = abb_crear(strcmp, NULL);
 
     char *clave1 = "perro", *valor1 = "guau";
     char *clave2 = "gato", *valor2 = "miau";
@@ -175,7 +175,7 @@ static void prueba_abb_borrar()
     abb_destruir(abb);
 }
 
-
+/*
 static void prueba_abb_clave_vacia()
 {
     abb_t* abb = abb_crear(NULL);
@@ -408,7 +408,7 @@ void pruebas_abb_alumno()
     prueba_abb_insertar();
     prueba_abb_reemplazar();
     prueba_abb_reemplazar_con_destruir();
-    //prueba_abb_borrar();
+    prueba_abb_borrar();
     //prueba_abb_clave_vacia();
     //prueba_abb_valor_null();
     //prueba_abb_volumen(10000, true);

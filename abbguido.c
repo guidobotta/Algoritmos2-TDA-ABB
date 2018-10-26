@@ -101,6 +101,7 @@ void _borrar_(abb_t *arbol, abb_nodo_t* hijo, abb_nodo_t* padre, abb_nodo_t* nue
     } else {
         padre->izq = nuevo_hijo;
     }
+    free((char*)hijo->clave);
     free(hijo);
 }
 
@@ -110,13 +111,20 @@ void *abb_borrar(abb_t *arbol, const char *clave){
     if (!hijo) return NULL;
 
     void* dato = hijo->dato;
-
-    if (hijo->izq){
-        if (hijo->der){} //CON DOS HIJOS
+    
+    if (!padre){
+        arbol->raiz = NULL;
+        free((char*)hijo->clave);
+        free(hijo);
+    } else if (hijo->izq){
+        if (hijo->der){ //CON DOS HIJOS
+            
+        }
         else _borrar_(arbol, hijo, padre, hijo->izq); //CON UN HIJO IZQUIERDO
     } else if(hijo->der) _borrar_(arbol, hijo, padre, hijo->der); //CON UN HIJO DERECHO
     else _borrar_(arbol, hijo, padre, NULL); //SIN HIJOS
 
+    arbol->cantidad --;
     return dato;
 }
 
