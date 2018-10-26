@@ -95,12 +95,18 @@ bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
     return true;
 }
 
+//Borrar para cero o un hijo
 void _borrar_(abb_t *arbol, abb_nodo_t* hijo, abb_nodo_t* padre, abb_nodo_t* nuevo_hijo){
-    if ((arbol->cmp(hijo->clave, padre->clave)) > 0){
-        padre->der = nuevo_hijo;
-    } else {
-        padre->izq = nuevo_hijo;
+    if(padre){
+        if ((arbol->cmp(hijo->clave, padre->clave)) > 0){
+            padre->der = nuevo_hijo;
+        } else {
+            padre->izq = nuevo_hijo;
+        }
+    }else{
+        arbol->raiz = nuevo_hijo;
     }
+    if (arbol->destruir_dato) arbol->destruir_dato(hijo->dato);
     free((char*)hijo->clave);
     free(hijo);
 }
@@ -117,16 +123,14 @@ void *abb_borrar(abb_t *arbol, const char *clave){
 
     void* dato = hijo->dato;
     
-    if (!padre){ //MAL CHEQUEO, PUEDE NO TENER PADRE PERO SI TENES HIJOS
-        arbol->raiz = NULL;
-        free((char*)hijo->clave);
-        free(hijo);
-    } else if (hijo->izq){
+    if (hijo->izq){
         if (hijo->der){ //CON DOS HIJOS
-            abb_nodo_t* reemplazante = buscar_reemplazante(hijo->der);        
-            //Guardar Clave
-            //Borrar reemplazante
-            //Pisar nodo a borrar
+            abb_nodo_t* reemplazante = buscar_reemplazante(hijo->der);
+            char* copia_clave = malloc(sizeof(char)*(strlen(reemplazante->clave)+1));
+            strcpy(copia_clave, reemplazante->clave);
+            void* copia_dato = abb_borrar(arbol, reemplazante->clave);
+            hijo->clave = copia_clave;
+            hijo->dato = copia_dato;
         }
         else _borrar_(arbol, hijo, padre, hijo->izq); //CON UN HIJO IZQUIERDO
     } else if(hijo->der) _borrar_(arbol, hijo, padre, hijo->der); //CON UN HIJO DERECHO

@@ -175,10 +175,10 @@ static void prueba_abb_borrar()
     abb_destruir(abb);
 }
 
-/*
+
 static void prueba_abb_clave_vacia()
 {
-    abb_t* abb = abb_crear(NULL);
+    abb_t* abb = abb_crear(strcmp, NULL);
 
     char *clave = "", *valor = "";
 
@@ -195,7 +195,7 @@ static void prueba_abb_clave_vacia()
 
 static void prueba_abb_valor_null()
 {
-    abb_t* abb = abb_crear(NULL);
+    abb_t* abb = abb_crear(strcmp, NULL);
 
     char *clave = "", *valor = NULL;
 
@@ -212,7 +212,7 @@ static void prueba_abb_valor_null()
 
 static void prueba_abb_volumen(size_t largo, bool debug)
 {
-    abb_t* abb = abb_crear(NULL);
+    abb_t* abb = abb_crear(strcmp, NULL);
 
     const size_t largo_clave = 10;
     char (*claves)[largo_clave] = malloc(largo * largo_clave);
@@ -254,7 +254,7 @@ static void prueba_abb_volumen(size_t largo, bool debug)
 
     // Destruye el abb y crea uno nuevo que sí libera //
     abb_destruir(abb);
-    abb = abb_crear(free);
+    abb = abb_crear(strcmp, free);
 
     // Inserta 'largo' parejas en el abb //
     ok = true;
@@ -269,7 +269,7 @@ static void prueba_abb_volumen(size_t largo, bool debug)
     abb_destruir(abb);
 
 }
-
+/*
 static ssize_t buscar(const char* clave, char* claves[], size_t largo)
 {
     for (size_t i = 0; i < largo; i++) {
@@ -409,9 +409,9 @@ void pruebas_abb_alumno()
     prueba_abb_reemplazar();
     prueba_abb_reemplazar_con_destruir();
     prueba_abb_borrar();
-    //prueba_abb_clave_vacia();
-    //prueba_abb_valor_null();
-    //prueba_abb_volumen(10000, true);
+    prueba_abb_clave_vacia();
+    prueba_abb_valor_null();
+    prueba_abb_volumen(10000, true);
     //prueba_abb_iterar();
     //prueba_abb_iterar_volumen(5000);
 }
