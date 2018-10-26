@@ -51,6 +51,31 @@ abb_nodo_t* buscar_hijo(abb_nodo_t* actual, abb_nodo_t** padre, const char* clav
 }
 
 /* ******************************************************************
+ *                      FUNCIONES PRIVADAS
+ * *****************************************************************/
+
+//Borrar para cero o un hijo
+void _borrar_(abb_t *arbol, abb_nodo_t* hijo, abb_nodo_t* padre, abb_nodo_t* nuevo_hijo){
+    if(padre){
+        if ((arbol->cmp(hijo->clave, padre->clave)) > 0){
+            padre->der = nuevo_hijo;
+        } else {
+            padre->izq = nuevo_hijo;
+        }
+    }else{
+        arbol->raiz = nuevo_hijo;
+    }
+    if (arbol->destruir_dato) arbol->destruir_dato(hijo->dato);
+    free((char*)hijo->clave);
+    free(hijo);
+}
+
+abb_nodo_t* buscar_reemplazante(abb_nodo_t* actual){
+    if(!actual->izq) return actual;
+    return buscar_reemplazante(actual->izq);
+}
+
+/* ******************************************************************
  *                      PRIMITIVAS DEL ABB
  * *****************************************************************/
 
@@ -93,27 +118,6 @@ bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
     }
 
     return true;
-}
-
-//Borrar para cero o un hijo
-void _borrar_(abb_t *arbol, abb_nodo_t* hijo, abb_nodo_t* padre, abb_nodo_t* nuevo_hijo){
-    if(padre){
-        if ((arbol->cmp(hijo->clave, padre->clave)) > 0){
-            padre->der = nuevo_hijo;
-        } else {
-            padre->izq = nuevo_hijo;
-        }
-    }else{
-        arbol->raiz = nuevo_hijo;
-    }
-    if (arbol->destruir_dato) arbol->destruir_dato(hijo->dato);
-    free((char*)hijo->clave);
-    free(hijo);
-}
-
-abb_nodo_t* buscar_reemplazante(abb_nodo_t* actual){
-    if(!actual->izq) return actual;
-    return buscar_reemplazante(actual->izq);
 }
 
 void *abb_borrar(abb_t *arbol, const char *clave){
@@ -174,3 +178,25 @@ void abb_destruir(abb_t* arbol){
     destruir_arbol(arbol->raiz, arbol->destruir_dato);
     free(arbol);
 }
+
+/* ******************************************************************
+ *                PRIMITIVAS DEL ITERADOR INTERNO
+ * *****************************************************************/
+
+void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra);
+
+/* ******************************************************************
+ *                PRIMITIVAS DEL ITERADOR EXTERNO
+ * *****************************************************************/+
+
+typedef struct abb_iter abb_iter_t;   
+
+abb_iter_t *abb_iter_in_crear(const abb_t *arbol);
+
+bool abb_iter_in_avanzar(abb_iter_t *iter);
+
+const char *abb_iter_in_ver_actual(const abb_iter_t *iter);
+
+bool abb_iter_in_al_final(const abb_iter_t *iter);
+
+void abb_iter_in_destruir(abb_iter_t* iter);
