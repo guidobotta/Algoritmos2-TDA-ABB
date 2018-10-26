@@ -105,6 +105,11 @@ void _borrar_(abb_t *arbol, abb_nodo_t* hijo, abb_nodo_t* padre, abb_nodo_t* nue
     free(hijo);
 }
 
+abb_nodo_t* buscar_reemplazante(abb_nodo_t* actual){
+    if(!actual->izq) return actual;
+    return buscar_reemplazante(actual->izq);
+}
+
 void *abb_borrar(abb_t *arbol, const char *clave){
     abb_nodo_t* padre = NULL;
     abb_nodo_t* hijo = buscar_hijo(arbol->raiz, &padre, clave, arbol->cmp);
@@ -112,13 +117,16 @@ void *abb_borrar(abb_t *arbol, const char *clave){
 
     void* dato = hijo->dato;
     
-    if (!padre){
+    if (!padre){ //MAL CHEQUEO, PUEDE NO TENER PADRE PERO SI TENES HIJOS
         arbol->raiz = NULL;
         free((char*)hijo->clave);
         free(hijo);
     } else if (hijo->izq){
         if (hijo->der){ //CON DOS HIJOS
-            
+            abb_nodo_t* reemplazante = buscar_reemplazante(hijo->der);        
+            //Guardar Clave
+            //Borrar reemplazante
+            //Pisar nodo a borrar
         }
         else _borrar_(arbol, hijo, padre, hijo->izq); //CON UN HIJO IZQUIERDO
     } else if(hijo->der) _borrar_(arbol, hijo, padre, hijo->der); //CON UN HIJO DERECHO
