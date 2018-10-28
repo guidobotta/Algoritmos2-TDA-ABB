@@ -188,7 +188,7 @@ void abb_destruir(abb_t* arbol){
 void in_order(abb_nodo_t* actual, bool visitar(const char *, void *, void*), void *extra){
     if(!actual) return;
     in_order(actual->izq, visitar, extra);
-    visitar(actual->clave, actual->dato, extra);
+    if(!visitar(actual->clave, actual->dato, extra)) return;
     in_order(actual->der, visitar, extra);
 }
 

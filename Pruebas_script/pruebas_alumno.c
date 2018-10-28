@@ -494,7 +494,3 @@ void pruebas_volumen_alumno(size_t largo)
 {
     prueba_abb_volumen(largo, false);
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> b493ab2f48dd81024c6ea2cc7b099bd77b112095
