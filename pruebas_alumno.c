@@ -449,9 +449,9 @@ void pruebas_abb_alumno()
     prueba_abb_iterar_volumen(1000);
     prueba_iterador_externo();
 }
-/*
+
 void pruebas_volumen_alumno(size_t largo)
 {
     prueba_abb_volumen(largo, false);
 }
-*/
+
