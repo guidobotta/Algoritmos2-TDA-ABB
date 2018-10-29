@@ -4,7 +4,6 @@
 #include <string.h>
 #include "abb.h"
 #include "pila.h"
-
 /* ******************************************************************
  *                DEFINICION DE LOS TIPOS DE DATOS
  * *****************************************************************/
@@ -134,6 +133,7 @@ void *abb_borrar(abb_t *arbol, const char *clave){
             char* copia_clave = malloc(sizeof(char)*(strlen(reemplazante->clave)+1));
             strcpy(copia_clave, reemplazante->clave);
             void* copia_dato = abb_borrar(arbol, reemplazante->clave);
+            free((char*)hijo->clave);
             hijo->clave = copia_clave;
             hijo->dato = copia_dato;
             return dato;
@@ -185,15 +185,19 @@ void abb_destruir(abb_t* arbol){
  *                PRIMITIVAS DEL ITERADOR INTERNO
  * *****************************************************************/
 
-void in_order(abb_nodo_t* actual, bool visitar(const char *, void *, void*), void *extra){
+void in_order(abb_nodo_t* actual, bool visitar(const char *, void *, void*), void *extra, bool *todo_ok){
     if(!actual) return;
-    in_order(actual->izq, visitar, extra);
-    if(!visitar(actual->clave, actual->dato, extra)) return;
-    in_order(actual->der, visitar, extra);
+    in_order(actual->izq, visitar, extra, todo_ok);
+    if(!*todo_ok || !visitar(actual->clave, actual->dato, extra)){
+        *todo_ok = false;
+        return;
+    }
+    in_order(actual->der, visitar, extra, todo_ok);
 }
 
 void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra){
-    return in_order(arbol->raiz, visitar, extra);
+    bool todo_ok = true;
+    return in_order(arbol->raiz, visitar, extra, &todo_ok);
 }
 
 /* ******************************************************************

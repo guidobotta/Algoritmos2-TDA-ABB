@@ -431,12 +431,18 @@ bool formar_cadena(const char* clave, void* dato, void *cadena){
     return true;
 }
 
+bool corte_izq(const char* clave, void* dato, void *cadena){
+    //if(strcmp(clave, (char*)cadena) > 0) return false;
+    strcpy((char*)cadena, clave);
+    return false;
+}
+
 void prueba_iterador_interno(){
     abb_t *arbol = abb_crear(strcmp, free);
     char cadena[10] = "";
     char clave[10][10] = {"F", "D", "E", "B", "A", "G", "C"};
     char cadena_in_order[10] = "ABCDEFG";
-
+    char cadena1[5] = "Z";
 
     int **dato = malloc(sizeof(int*)*7);
     dato[0] = malloc(sizeof(int));
@@ -452,6 +458,8 @@ void prueba_iterador_interno(){
     }
     abb_in_order(arbol, formar_cadena, cadena);
     print_test("La cadena resultante es la correcta", !strcmp(cadena, cadena_in_order));
+    abb_in_order(arbol, corte_izq, cadena1);
+    print_test("La clave devuelta es correcta", !strcmp(cadena1, "A"));
     abb_destruir(arbol);
     free(dato);
 }
@@ -482,12 +490,15 @@ void pruebas_abb_alumno()
     printf("\n***Pruebas abb valor null***\n");
     prueba_abb_valor_null();
     printf("\n***Pruebas abb volumen***\n");
-    prueba_abb_volumen(5000, true);
+    prueba_abb_volumen(2000, true);
     printf("\n***Pruebas abb iterar***\n");
     prueba_abb_iterar();
     printf("\n***Pruebas abb iterar volumen***\n");
-    prueba_abb_iterar_volumen(5000);
-
+    prueba_abb_iterar_volumen(2000);
+    printf("\n***Pruebas abb iterarador externo***\n");
+    prueba_iterador_externo();
+    printf("\n***Pruebas iterador interno***\n");
+    prueba_iterador_interno();
 }
 
 void pruebas_volumen_alumno(size_t largo)
